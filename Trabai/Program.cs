@@ -1,4 +1,4 @@
-﻿using static System.Console;
+using static System.Console;
 
 namespace menu
 {
@@ -18,7 +18,7 @@ namespace menu
 
         public static void Main(string[] args)
         {
-            
+
             String[] options =
                 {
                     "1- Registrar Nova Turma",
@@ -38,7 +38,7 @@ namespace menu
                 ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("<<<<<<<<<<<<<<<< MENU >>>>>>>>>>>>>>>");
                 ForegroundColor = ConsoleColor.White;
-                
+
                 printMenu(options);
                 try
                 {
@@ -78,7 +78,7 @@ namespace menu
                         ExibirListaAlunos(0, 10);
                         break;
                     case 8:
-                        //Gravar();
+                        GRAVAR();
                         Clear();
                         WriteLine("Aperte qualquer tecla para fechar o programa!");
                         ForegroundColor = ConsoleColor.Black;
@@ -94,9 +94,9 @@ namespace menu
             }
         }
 
-        //static List<List<double>> Exame1 = new List<List<double>>();
-        //static List<List<double>> Exame2 = new List<List<double>>();
-        //static List<List<String>> Turmas = new List<List<String>>();
+        static List<List<double>> Exame1 = new List<List<double>>();
+        static List<List<double>> Exame2 = new List<List<double>>();
+        static List<List<String>> Turmas = new List<List<String>>();
 
         static List<List<string>> Lista_das_Turmas = new List<List<string>>();
         static List<string> NomeDasTurmas = new List<string>();
@@ -105,8 +105,8 @@ namespace menu
         {
             EscreverCabecalho("=              CADASTRAR TURMA              =");
             WriteLine("Deseja cadastrar uma nova turma?\n[1] - Sim\n[Qualquer valor] - Não");
-            
-            if(Perguntar_ao_usuario())
+
+            if (Perguntar_ao_usuario())
             {
                 String Turma = ReadLine();
                 if (Verificar_Se_Existe(Turma))
@@ -124,7 +124,7 @@ namespace menu
             {
                 return;
             }
-            
+
         }
 
         private static void CadastrarAluno()
@@ -135,16 +135,16 @@ namespace menu
             {
                 int Id_Turma;
 
-                Write("Em qual turma você deseja registrar um novo aluno(a)?\n Escreva o Id dela:");
+                Write("Em qual turma você deseja registrar um novo aluno(a)?\n Escreva o Id dela:\n");
                 Exibir_Lista_das_Turmas();
                 Id_Turma = Convert.ToInt16(ReadLine());
-                if (Id_Turma > NomeDasTurmas.Count-1)
+                if (Id_Turma > NomeDasTurmas.Count - 1)
                 {
                     WriteLine("Esse ID não consta na nossa base de dados!");
                 }
                 else
                 {
-                       
+
                 }
                 WriteLine("\nDigite o nome do(a) aluno(a): ");
                 String Aluno = ReadLine();
@@ -156,7 +156,7 @@ namespace menu
             {
                 return;
             }
-            
+
         }
 
         private static void RegistrarNota()
@@ -185,6 +185,35 @@ namespace menu
 
         private static void Exibir_Lista_das_Turmas()
         {
+            
+            for (int i = 0; i < NomeDasTurmas.Count; i++)
+            {
+                WriteLine($" {NomeDasTurmas[i]}");
+            }
+            
+
+        }
+        private static void GRAVAR() {
+            EscreverCabecalho("=            GRAVAR NO ARQUIVO              =");
+            try
+            {
+                StreamWriter dadosnomes;
+                string arq = @"C:\cool\collzinho.txt";
+                dadosnomes = File.CreateText(arq);
+                foreach (var item in NomeDasTurmas)
+                {
+                    dadosnomes.WriteLine($"{item}");
+                }
+                dadosnomes.Close();
+            }
+            catch (Exception e)
+            {
+                WriteLine($"{e.Message}");
+            }
+            finally
+            {
+                WriteLine("<<<<<<<< DADOS GRAVADOS COM SUCESSO! >>>>>>>>>");
+            }
 
         }
 
