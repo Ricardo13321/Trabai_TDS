@@ -108,7 +108,7 @@ namespace menu
                 if (Verificar_Se_Existe(Turma))
                 {
                     NomeDasTurmas.Add(Turma);
-                    List<String> _loc_ = new List<String>();
+                    List<List<string>> _loc_ = new List<List<String>>();
                     Lista_das_Turmas.Add(_loc_);
                 }
                 else
