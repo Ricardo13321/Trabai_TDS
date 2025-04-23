@@ -21,14 +21,14 @@ namespace menu
 
             String[] options =
                 {
-                    "1- Registrar Nova Turma",
-                    "2- Registrar Novo Aluno",
-                    "3- Registrar Nota",
-                    "4- Exibir Aprovados",
-                    "5- Exibir Recuperação",
-                    "6- Exibir Reprovados",
-                    "7- Exibir Lista Geral",
-                    "8- Sair"
+                    "[1]- Registrar Nova Turma",
+                    "[2]- Registrar Novo Aluno",
+                    "[3]- Registrar Nota",
+                    "[4]- Exibir Aprovados",
+                    "[5]- Exibir Recuperação",
+                    "[6]- Exibir Reprovados",
+                    "[7]- Exibir Lista Geral",
+                    "[8]- Sair"
                 };
 
             int option = 0;
@@ -94,11 +94,7 @@ namespace menu
             }
         }
 
-        static List<List<double>> Exame1 = new List<List<double>>();
-        static List<List<double>> Exame2 = new List<List<double>>();
-        static List<List<String>> Turmas = new List<List<String>>();
-
-        static List<List<string>> Lista_das_Turmas = new List<List<string>>();
+        static List<List<List<string>>> Lista_das_Turmas = new List<List<List<string>>>();
         static List<string> NomeDasTurmas = new List<string>();
 
         private static void CadastrarTurma()
