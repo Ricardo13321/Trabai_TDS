@@ -1,0 +1,15 @@
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\Trabai.csproj.AssemblyReference.cache
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\Trabai.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\Trabai.AssemblyInfoInputs.cache
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\Trabai.AssemblyInfo.cs
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\Trabai.csproj.CoreCompileInputs.cache
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\bin\Debug\net7.0\Trabai.exe
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\bin\Debug\net7.0\Trabai.deps.json
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\bin\Debug\net7.0\Trabai.runtimeconfig.json
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\bin\Debug\net7.0\Trabai.dll
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\bin\Debug\net7.0\Trabai.pdb
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\Trabai.dll
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\refint\Trabai.dll
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\Trabai.pdb
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\Trabai.genruntimeconfig.cache
+C:\Users\Aluno\source\Trabai_TDS-main\Trabai\obj\Debug\net7.0\ref\Trabai.dll
