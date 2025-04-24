@@ -37,7 +37,7 @@ namespace menu
                 Clear();
                 ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("<<<<<<<<<<<<<<<< MENU >>>>>>>>>>>>>>>");
-                ForegroundColor = ConsoleColor.White;
+                ForegroundColor = ConsoleColor.Yellow;
 
                 printMenu(options);
                 try
@@ -104,6 +104,9 @@ namespace menu
 
             if (Perguntar_ao_usuario())
             {
+                Clear();
+                EscreverCabecalho("=              CADASTRAR TURMA              =");
+                WriteLine("Digite o nome/código da nova turma:");
                 String Turma = ReadLine();
                 if (Verificar_Se_Existe(Turma))
                 {
@@ -113,7 +116,13 @@ namespace menu
                 }
                 else
                 {
-                    WriteLine("Essa turma já consta na nossa base de dados!");
+                    Clear();
+                    ForegroundColor = ConsoleColor.Red;
+                    EscreverCabecalho("=                   Aviso!                  =");   
+                    WriteLine($"A turma {Turma} já consta na nossa base de dados!");
+                    ForegroundColor = ConsoleColor.Yellow;
+                    WriteLine("Aperte enter para voltar ao menu.");
+                    ReadLine();
                 }
             }
             else
@@ -189,12 +198,36 @@ namespace menu
             try
             {
                 StreamWriter dadosnomes;
+
+
                 string arq = @"C:\BaseDeDados\Turmas.txt";
                 dadosnomes = File.CreateText(arq);
                 foreach (var item in NomeDasTurmas)
                 {
                     dadosnomes.WriteLine($"{item}");
                 }
+              
+                for (int i = 0; i < Lista_das_Turmas.Count; i++)
+                {
+                    arq = @$"C:\BaseDeDados\Alunos{i}.txt";
+                    foreach (var item in Lista_das_Turmas[i])
+                    {
+                        dadosnomes.WriteLine($"{item[0]}");
+                    }
+
+                    arq = @$"C:\BaseDeDados\Av1{i}.txt";
+                    foreach (var item in Lista_das_Turmas[i])
+                    {
+                        dadosnomes.WriteLine($"{item[1]}");
+                    }
+
+                    arq = @$"C:\BaseDeDados\Av2{i}.txt";
+                    foreach (var item in Lista_das_Turmas[i])
+                    {
+                        dadosnomes.WriteLine($"{item[2]}");
+                    }
+                }
+
                 dadosnomes.Close();
             }
             catch (Exception e)
@@ -203,7 +236,10 @@ namespace menu
             }
             finally
             {
+                Clear();
+                ForegroundColor = ConsoleColor.Green;
                 WriteLine("DADOS GRAVADOS COM SUCESSO!");
+                ForegroundColor = ConsoleColor.Yellow;
             }
             ReadLine();
         }
