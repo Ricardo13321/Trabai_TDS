@@ -6,7 +6,6 @@ namespace menu
     {
         public static void printMenu(String[] options)
         {
-            Carregar();
             foreach (String option in options)
             {
                 Console.WriteLine(option);
@@ -18,6 +17,7 @@ namespace menu
 
         public static void Main(string[] args)
         {
+            Carregar();
 
             String[] options =
                 {
@@ -99,8 +99,13 @@ namespace menu
 
         private static void CadastrarTurma()
         {
-            EscreverCabecalho("=              CADASTRAR TURMA              =");
-            WriteLine("Deseja cadastrar uma nova turma?\n[1] - Sim\n[Qualquer valor] - Não");
+            EscreverCabecalho("             TURMAS CADASTRADAS");
+            Exibir_Lista_das_Turmas();
+            WriteLine("---------------------------------------------\n"+
+                      "      Deseja cadastrar uma nova turma?\n" +
+                      "---------------------------------------------\n" +
+                      "[1] - Sim\n" +
+                      "[Qualquer valor] - Não\n");
 
             if (Perguntar_ao_usuario())
             {
@@ -108,25 +113,34 @@ namespace menu
                 EscreverCabecalho("=              CADASTRAR TURMA              =");
                 WriteLine("Digite o nome/código da nova turma:");
                 String Turma = ReadLine();
-                if (Verificar_Se_Existe(Turma))
+                if (!Verificar_Se_Existe(Turma))
                 {
                     NomeDasTurmas.Add(Turma);
                     List<List<string>> _loc_ = new List<List<String>>();
                     Lista_das_Turmas.Add(_loc_);
+                    Clear();
+                    WriteLine($"A turma {Turma} foi cadastrada com sucesso!\n" +
+                        "Salvando alterações"); 
+                    Thread.Sleep(2000);
+                    GRAVAR();
                 }
                 else
                 {
                     Clear();
                     ForegroundColor = ConsoleColor.Red;
                     EscreverCabecalho("=                   Aviso!                  =");   
-                    WriteLine($"A turma {Turma} já consta na nossa base de dados!");
+                    WriteLine($"A turma {Turma} já consta na nossa base de dados!\nRetornando para o Menu princípal.");
                     ForegroundColor = ConsoleColor.Yellow;
-                    WriteLine("Aperte enter para voltar ao menu.");
-                    ReadLine();
+                    Thread.Sleep(2000);
                 }
             }
             else
             {
+                Clear();
+                CursorVisible = false;
+                WriteLine("Retornando para Menu principal.");
+                Thread.Sleep(2000);
+                CursorVisible = true;
                 return;
             }
 
@@ -134,15 +148,31 @@ namespace menu
 
         private static void CadastrarAluno()
         {
-            EscreverCabecalho("=              CADASTRAR ALUNO               =");
+            EscreverCabecalho("               CADASTRAR ALUNO               ");
             WriteLine("Deseja cadastrar um novo(a) aluno(a)?\n[1] - Sim\n[Qualquer valor] - Não");
             if (Perguntar_ao_usuario())
             {
                 int Id_Turma;
-
-                Write("Em qual turma você deseja registrar um novo aluno(a)?\n Escreva o Id dela:\n");
+                Clear();
+                EscreverCabecalho("               CADASTRAR ALUNO               ");
+                WriteLine("---------------------------------------------\n" +
+                      "Em qual turma você deseja registrar um novo \n" +
+                      "aluno(a)?\n" +
+                      "---------------------------------------------");
                 Exibir_Lista_das_Turmas();
-                Id_Turma = Convert.ToInt16(ReadLine());
+                WriteLine("[X] CANCELAR");
+                try
+                {
+                    Id_Turma = Convert.ToInt16(ReadLine());
+                }
+                catch (Exception ex)
+                {
+                    Clear();
+                    WriteLine("Retornando para o Menu principal!");
+                    Thread.Sleep(1000);
+                    return;
+                }
+                
                 if (Id_Turma > NomeDasTurmas.Count - 1)
                 {
                     WriteLine("Esse ID não consta na nossa base de dados!");
@@ -190,7 +220,7 @@ namespace menu
         {
             for (int i = 0; i < NomeDasTurmas.Count; i++)
             {
-                WriteLine($" {NomeDasTurmas[i]}");
+                WriteLine($"[{i}] - {NomeDasTurmas[i]}");
             }
         }
         private static void GRAVAR()
@@ -199,14 +229,15 @@ namespace menu
             {
                 StreamWriter dadosnomes;
 
-
                 string arq = @"C:\BaseDeDados\Turmas.txt";
                 dadosnomes = File.CreateText(arq);
                 foreach (var item in NomeDasTurmas)
                 {
                     dadosnomes.WriteLine($"{item}");
                 }
-              
+                dadosnomes.Close();
+
+                /*
                 for (int i = 0; i < Lista_das_Turmas.Count; i++)
                 {
                     arq = @$"C:\BaseDeDados\Alunos{i}.txt";
@@ -227,8 +258,8 @@ namespace menu
                         dadosnomes.WriteLine($"{item[2]}");
                     }
                 }
-
-                dadosnomes.Close();
+                */
+                
             }
             catch (Exception e)
             {
@@ -241,7 +272,9 @@ namespace menu
                 WriteLine("DADOS GRAVADOS COM SUCESSO!");
                 ForegroundColor = ConsoleColor.Yellow;
             }
-            ReadLine();
+            CursorVisible = false;
+            Thread.Sleep(1000);
+            CursorVisible = true;
         }
 
         private static void ExibirListaAlunos(double min, double max)
@@ -269,8 +302,11 @@ namespace menu
 
         private static void Carregar()
         {
-
-
+            var _loc_ = File.ReadAllLines(@"C:\BaseDeDados\Turmas.txt");
+            for (int i = 0; i < _loc_.Length; i++)
+            {
+                NomeDasTurmas.Add(_loc_[i]);
+            }
         }
 
         private static void EscreverCabecalho(String Titulo)
