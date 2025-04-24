@@ -145,7 +145,6 @@ namespace menu
                 WriteLine("\nDigite o nome do(a) aluno(a): ");
                 String Aluno = ReadLine();
                 WriteLine("Digite o nome da turma: ");
-                int Turma = PegarIdTurma(ReadLine());
                 //Turmas[Turma].Add(Aluno);
             }
             else
@@ -167,7 +166,6 @@ namespace menu
 
             WriteLine($"Digite o valor do {Op}º exame");
             int Nota = Convert.ToInt32(ReadLine());
-            int Id = PegarIdAluno(Aluno);
 
             if (Op == 1)
             {
