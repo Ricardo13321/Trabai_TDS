@@ -225,18 +225,9 @@ namespace menu
             return 0;
         }
 
-        private static Boolean Verificar_Se_Existe(String turma)
+        private static Boolean Verificar_Se_Existe(String Value)
         {
-            Boolean repetido = NomeDasTurmas.Any(x => x.Contains(turma));
-            if (repetido)
-            {
-                WriteLine($"A turma {turma} já consta em nossos registros!");
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+           return NomeDasTurmas.Any(x => x.Contains(Value));
         }
 
 
