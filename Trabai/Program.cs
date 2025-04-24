@@ -215,16 +215,6 @@ namespace menu
 
         }
 
-        private static int PegarIdTurma(String Nome)
-        {
-            return 0;
-        }
-
-        private static int PegarIdAluno(String Aluno)
-        {
-            return 0;
-        }
-
         private static Boolean Verificar_Se_Existe(String Value)
         {
            return NomeDasTurmas.Any(x => x.Contains(Value));
