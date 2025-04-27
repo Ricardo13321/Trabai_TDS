@@ -37,7 +37,7 @@ namespace menu
         //Essa função é responsável por exibir uma lista das turma e seus IDs
         private static void Exibir_Lista_das_Turmas()
         {
-            WriteLine("Turmas Registradas\n");
+            WriteLine("Turmas Registradas");
             Exibir_Barra();
             for (int i = 0; i < NomeDasTurmas.Count; i++)
             {
@@ -79,7 +79,7 @@ namespace menu
                 }
                 i++;
             }
-            ReadLine();
+            Exibir_Barra();
         }
 
         //Pega o valor da nota
@@ -129,12 +129,11 @@ namespace menu
         public static void Main(string[] args)
         {
             Carregar();
-
             String[] options =
                 {
                     "[1]- Registrar Nova Turma",
                     "[2]- Registrar Novo Aluno",
-                    "[3]- Registrar Nota",
+                    "[3]- Editar Nota",
                     "[4]- Exibir Aprovados",
                     "[5]- Exibir Recuperação",
                     "[6]- Exibir Reprovados",
@@ -175,19 +174,23 @@ namespace menu
                         CadastrarAluno();
                         break;
                     case 3:
-                        RegistrarNota();
+                        EditarNota();
                         break;
                     case 4:
                         Exibir_Lista_Alunos(7, 10, "            ALUNOS ARPOVADOS");
+                        ReadLine();
                         break;
                     case 5:
                         Exibir_Lista_Alunos(5, 6.9, "           ALUNOS DE RECUPERAÇÃO");
+                        ReadLine();
                         break;
                     case 6:
                         Exibir_Lista_Alunos(0, 4.9, "           ALUNOS REPROVADOS");
+                        ReadLine();
                         break;
                     case 7:
                         Exibir_Lista_Alunos(0, 10, "            TODOS OS ALUNOS");
+                        ReadLine();
                         break;
                     case 8:
                         GRAVAR();
@@ -221,7 +224,7 @@ namespace menu
                 Exibir_Lista_das_Turmas();
 
                 Exibir_Barra();
-                WriteLine("Digite o nome/código da nova turma\n");
+                WriteLine("Digite o nome/código da nova turma");
                 Exibir_Barra();
                 Turma = ReadLine().ToUpper();
 
@@ -267,7 +270,7 @@ namespace menu
                 {
                     EscreverCabecalho("               CADASTRAR ALUNO               ");
                     Exibir_Barra();
-                    WriteLine("Em qual turma você deseja registrar um novo \naluno(a)?\n");
+                    WriteLine("Em qual turma você deseja registrar um novo \naluno(a)?");
                     Exibir_Barra();
 
                     try
@@ -275,7 +278,7 @@ namespace menu
                         Exibir_Lista_das_Turmas();
                         Write("[X] CANCELAR\n");
                         Exibir_Barra();
-                        WriteLine("Escreva o ID da turma:");
+                        Write("Escreva o ID da turma:");
                         Id_Turma = Convert.ToInt32(ReadLine());
                     }
                     catch (Exception ex)
@@ -296,13 +299,13 @@ namespace menu
                     else
                     {
                         EscreverCabecalho("               CADASTRAR ALUNO               ");
-                        Write("Digite o nome do(a) aluno(a), que deseja \n" +
-                                 $"inserir na turma {NomeDasTurmas[Id_Turma]}\n");
+                        WriteLine("Digite o nome do(a) aluno(a), que deseja \n" +
+                                 $"inserir na turma {NomeDasTurmas[Id_Turma]}");
                         Exibir_Barra();
-                        WriteLine("NOME: ");
-                        String Aluno = ReadLine().ToUpper(), Avaliacao_1, Avaliacao_2;
-                        Avaliacao_1 = Pegar_Nota("Avaliação 1: ");
-                        Avaliacao_2 = Pegar_Nota("Avaliação 2: ");
+                        Write("NOME: ");
+                        String Aluno = ReadLine().ToUpper(), Avaliacao_1 = "0", Avaliacao_2 = "0";
+                        //Avaliacao_1 = Pegar_Nota("Avaliação 1: ");
+                        //Avaliacao_2 = Pegar_Nota("Avaliação 2: ");
                         //Criando uma lista em Lista
                         List<string> _loc_ = new List<String>();
                         Lista_das_Turmas[Id_Turma].Add(_loc_);
@@ -313,6 +316,7 @@ namespace menu
                         Lista_das_Turmas[Id_Turma][Id_Aluno].Add(Convert.ToString(Avaliacao_2));
                         WriteLine($"Nome: {Lista_das_Turmas[Id_Turma][Id_Aluno][0]} Turma: {Lista_das_Turmas[Id_Turma][Id_Aluno].Count - 1} Av1: {Lista_das_Turmas[Id_Turma][Id_Aluno][1]} Av2: {Lista_das_Turmas[Id_Turma][Id_Aluno][2]}");
                         ReadLine();
+                        GRAVAR();
                         return;
                     }
                 }
@@ -324,27 +328,73 @@ namespace menu
 
         }
 
-        private static void RegistrarNota()
+        private static void EditarNota()
         {
+            string Aluno, Turma;
+            int Op, ID_Aluno = -1, ID_Turma = -1;
+            
             Clear();
-            Exibir_Lista_Alunos(0, 10, "              LISTA DE ALUNOS");
-            WriteLine("Digite o nome do aluno");
-            string Aluno = ReadLine();
+            Exibir_Lista_Alunos(0, 10, "              EDITAR NOTA");
+            Write("Digite o nome do aluno(a): ");
+            Aluno = ReadLine().ToUpper();
 
-            WriteLine("Qual exame você quer alterar o valor: ");
-            int Op = Convert.ToInt32(ReadLine());
+            Write("Digite a turma desse aluno(a): ");
+            Turma = ReadLine().ToUpper();
+            Exibir_Barra();
 
-            WriteLine($"Digite o valor do {Op}º exame");
-            int Nota = Convert.ToInt32(ReadLine());
-
-            if (Op == 1)
+            for (int i = 0; i < NomeDasTurmas.Count; i++)
             {
-                //Exame1[Id].Add(Nota);
+                if (Turma == NomeDasTurmas[i])
+                {
+                    ID_Turma = i;
+                    for (int j = 0; j < Lista_das_Turmas[i].Count; j++)
+                    {
+                        if (Aluno == Lista_das_Turmas[i][j][0])
+                        {
+                            ID_Aluno = j;
+                            Write(
+                                "[1] - Avaliação 1\n" +
+                                "[2] - Avaliação 2\n" +
+                                "Digite sua escolha: ");
+                            try
+                            {
+                                Op = Convert.ToInt32(ReadLine());
+                                Exibir_Barra();
+                                Write($"Escolha o valor da {Op}ª avaliação, digite um valor\n entre 0 e 10\nNova nota: ");
+                                int Nota = Convert.ToInt32(ReadLine());
+                                if (Nota < 0 || Nota > 10)
+                                {
+                                    Retornando_Para_O_Menu_Principal();
+                                    return;
+                                }
+                                if (Op == 1)
+                                {
+                                    Lista_das_Turmas[ID_Turma][ID_Aluno][1] = Convert.ToString(Nota);
+                                }
+                                else if (Op == 2)
+                                {
+                                    Lista_das_Turmas[ID_Turma][ID_Aluno][2] = Convert.ToString(Nota);
+                                }
+                                Clear();
+                                WriteLine("A nota foi alterada com sucesso!");
+                                Thread.Sleep(2000);
+                                GRAVAR();
+                                Retornando_Para_O_Menu_Principal();
+                                return;
+                            }
+                            catch (Exception)
+                            {
+                                Retornando_Para_O_Menu_Principal();
+                                return;
+                            }
+                        }
+                    }
+                }
             }
-            else if (Op == 2)
-            {
-                //Exame2[Id].Add(Nota);
-            }
+            Clear();
+            WriteLine("Não foi encontrado nenhum aluno(a) correspondente\na turma ou não foi possível encontrar a turma");
+            Thread.Sleep(2000);
+            Retornando_Para_O_Menu_Principal();
         }
 
         private static void Exibir_Lista_da_Turma()
