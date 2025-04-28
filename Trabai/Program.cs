@@ -371,5 +371,74 @@ namespace menu
             Clear();
             WriteLine($"=============================================\n{Titulo}\n=============================================");
         }
+
+
+
+
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            ALTERAÇAO EM REGISTRAR NOTA 
+
+            private static void RegistrarNota()
+        {
+            EscreverCabecalho("REGISTRAR NOTA");
+            ExibirListaAlunos(0, 10);
+            WriteLine("Qual avaliação deseja registrar?\n" +
+               "[1] - AV1\n" +
+               "[2] - AV2\n"+
+               "[X] - SAIR");
+
+            if (Perguntar_ao_usuario())
+            {
+                Clear();
+                EscreverCabecalho("=              REGISTRANDO NOTA              =");
+                WriteLine("Digite o valor da AV1:");
+                double nota = Convert.ToDouble(ReadLine());
+
+                if (Verificar_Se_Existe_Nota(nota))
+                {
+                    List<List<double>> _loc_ = new List<List<double>>();
+                    Clear();
+                    WriteLine($"A nota {nota} foi cadastrada com sucesso!\n" +
+                        "Salvando alterações...");
+                    Thread.Sleep(2000);
+                    ReadLine();
+                    GRAVAR();
+                }
+                string opcao =Convert.ToString(ReadLine());
+                if (opcao == "X")
+                {
+                    Clear();
+                   CursorVisible = false;
+                   WriteLine("Retornando para Menu principal.");
+                   Thread.Sleep(2000);
+                   CursorVisible = true;
+                   return;
+                }
+                else
+                {
+                    Clear();
+                    ForegroundColor = ConsoleColor.Red;
+                    EscreverCabecalho("=                   Aviso!                  =");
+                    WriteLine($"A nota {nota} já consta na nossa base de dados!\nRetornando para o Menu principal.");
+                    ForegroundColor = ConsoleColor.Yellow;
+                    Thread.Sleep(2000);
+                }
+            }
+            else
+            {
+                Clear();
+                CursorVisible = false;
+                WriteLine("Retornando para Menu principal.");
+                Thread.Sleep(2000);
+                CursorVisible = true;
+                return;
+            }
+
+            WriteLine("Digite o número da avaliação (1 ou 2):");
+            int Op = Convert.ToInt32(ReadLine());
+
+            WriteLine($"Digite o valor do {Op}º exame:");
+            double Nota = Convert.ToDouble(ReadLine());
+        }
     }
 }
