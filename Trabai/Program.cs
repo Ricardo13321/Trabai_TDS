@@ -378,14 +378,14 @@ namespace menu
         -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             ALTERAÇAO EM REGISTRAR NOTA 
 
-            private static void RegistrarNota()
+           private static void RegistrarNota()
         {
             EscreverCabecalho("REGISTRAR NOTA");
             ExibirListaAlunos(0, 10);
             WriteLine("Qual avaliação deseja registrar?\n" +
                "[1] - AV1\n" +
                "[2] - AV2\n"+
-               "[X] - SAIR");
+               "[x] - SAIR");
 
             if (Perguntar_ao_usuario())
             {
@@ -393,6 +393,7 @@ namespace menu
                 EscreverCabecalho("=              REGISTRANDO NOTA              =");
                 WriteLine("Digite o valor da AV1:");
                 double nota = Convert.ToDouble(ReadLine());
+                double nota1 = Convert.ToDouble(ReadLine());
 
                 if (Verificar_Se_Existe_Nota(nota))
                 {
@@ -404,16 +405,7 @@ namespace menu
                     ReadLine();
                     GRAVAR();
                 }
-                string opcao =Convert.ToString(ReadLine());
-                if (opcao == "X")
-                {
-                    Clear();
-                   CursorVisible = false;
-                   WriteLine("Retornando para Menu principal.");
-                   Thread.Sleep(2000);
-                   CursorVisible = true;
-                   return;
-                }
+
                 else
                 {
                     Clear();
@@ -423,16 +415,17 @@ namespace menu
                     ForegroundColor = ConsoleColor.Yellow;
                     Thread.Sleep(2000);
                 }
+
             }
-            else
-            {
-                Clear();
-                CursorVisible = false;
-                WriteLine("Retornando para Menu principal.");
-                Thread.Sleep(2000);
-                CursorVisible = true;
+                else
+                {
+                   Clear();
+                   CursorVisible = false;
+                   WriteLine("Retornando para Menu principal.");
+                   Thread.Sleep(2000);
+                   CursorVisible = true;
                 return;
-            }
+                }
 
             WriteLine("Digite o número da avaliação (1 ou 2):");
             int Op = Convert.ToInt32(ReadLine());
@@ -440,5 +433,3 @@ namespace menu
             WriteLine($"Digite o valor do {Op}º exame:");
             double Nota = Convert.ToDouble(ReadLine());
         }
-    }
-}
