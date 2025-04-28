@@ -378,34 +378,32 @@ namespace menu
         -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             ALTERAÇAO EM REGISTRAR NOTA 
 
-           private static void RegistrarNota()
+          private static void RegistrarNota()
         {
             EscreverCabecalho("REGISTRAR NOTA");
             ExibirListaAlunos(0, 10);
             WriteLine("Qual avaliação deseja registrar?\n" +
                "[1] - AV1\n" +
-               "[2] - AV2\n"+
+               "[2] - AV2\n" +
                "[x] - SAIR");
-
+           
             if (Perguntar_ao_usuario())
             {
                 Clear();
                 EscreverCabecalho("=              REGISTRANDO NOTA              =");
                 WriteLine("Digite o valor da AV1:");
                 double nota = Convert.ToDouble(ReadLine());
-                double nota1 = Convert.ToDouble(ReadLine());
+
 
                 if (Verificar_Se_Existe_Nota(nota))
                 {
                     List<List<double>> _loc_ = new List<List<double>>();
-                    Clear();
                     WriteLine($"A nota {nota} foi cadastrada com sucesso!\n" +
                         "Salvando alterações...");
                     Thread.Sleep(2000);
                     ReadLine();
                     GRAVAR();
                 }
-
                 else
                 {
                     Clear();
@@ -417,17 +415,17 @@ namespace menu
                 }
 
             }
-                else
-                {
-                   Clear();
-                   CursorVisible = false;
-                   WriteLine("Retornando para Menu principal.");
-                   Thread.Sleep(2000);
-                   CursorVisible = true;
+            else
+            {
+                Clear();
+                CursorVisible = false;
+                WriteLine("Retornando para Menu principal.");
+                Thread.Sleep(2000);
+                CursorVisible = true;
                 return;
-                }
+            }
 
-            WriteLine("Digite o número da avaliação (1 ou 2):");
+            WriteLine("Digite a proxima avaliação a registrar ([1]-Av1 ou [2]-Av2):");
             int Op = Convert.ToInt32(ReadLine());
 
             WriteLine($"Digite o valor do {Op}º exame:");
