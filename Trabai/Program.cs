@@ -59,6 +59,8 @@ namespace menu
         {
             EscreverCabecalho(cabecalho);
             WriteLine("|         NOME          | AV1 | AV2 | MÉDIA | TURMA |");
+            WriteLine("|---------------------------------------------------|");
+            
             int i = 0;
             foreach (var item in Lista_das_Turmas)
             {
@@ -76,10 +78,11 @@ namespace menu
                     {
                         Write($"| {Nome.PadRight(22)}| " + (Nota_1 < 10 ? N1 : Nota_1 + " ") + $" | " + (Nota_2 < 10 ? N2 : Nota_2 + " ") + $" |  " + (Media < 10 ? M : Media + " ") + $"  | {NomeDasTurmas[i].PadRight(5)} |\n");
                     }
+                    
                 }
                 i++;
             }
-            Exibir_Barra();
+            WriteLine("=====================================================");
         }
 
         //Pega o valor da nota
@@ -350,29 +353,29 @@ namespace menu
                         if (Aluno == Lista_das_Turmas[i][j][0])
                         {
                             ID_Aluno = j;
-                            Write(
-                                "[1] - Avaliação 1\n" +
-                                "[2] - Avaliação 2\n" +
-                                "Digite sua escolha: ");
                             try
                             {
-                                Op = Convert.ToInt32(ReadLine());
-                                Exibir_Barra();
-                                Write($"Escolha o valor da {Op}ª avaliação, digite um valor\n entre 0 e 10\nNova nota: ");
+                                Write($"Escolha o valor da AV1 avaliação, digite um valor\n entre 0 e 10\nNova nota: ");
                                 int Nota = Convert.ToInt32(ReadLine());
                                 if (Nota < 0 || Nota > 10)
                                 {
                                     Retornando_Para_O_Menu_Principal();
                                     return;
                                 }
-                                if (Op == 1)
+                                Exibir_Barra();
+                                Lista_das_Turmas[ID_Turma][ID_Aluno][1] = Convert.ToString(Nota);
+                                Write($"Escolha o valor da AV2 avaliação, digite um valor\n entre 0 e 10\nNova nota: ");
+                                
+                                Nota = Convert.ToInt32(ReadLine());
+                                
+                                if (Nota < 0 || Nota > 10)
                                 {
-                                    Lista_das_Turmas[ID_Turma][ID_Aluno][1] = Convert.ToString(Nota);
+                                    Retornando_Para_O_Menu_Principal();
+                                    return;
                                 }
-                                else if (Op == 2)
-                                {
-                                    Lista_das_Turmas[ID_Turma][ID_Aluno][2] = Convert.ToString(Nota);
-                                }
+
+                                Lista_das_Turmas[ID_Turma][ID_Aluno][2] = Convert.ToString(Nota);
+                                
                                 Clear();
                                 WriteLine("A nota foi alterada com sucesso!");
                                 Thread.Sleep(2000);
