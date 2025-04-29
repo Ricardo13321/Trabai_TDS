@@ -71,10 +71,10 @@ namespace menu
                     N1 = Convert.ToString($"{Nota_1:F1}");
                     N2 = Convert.ToString($"{Nota_2:F1}");
                     M = Convert.ToString($"{Media:F1}");
-                    
+
                     if (Media >= min && Media <= max)
                     {
-                        Write($"| {Nome.PadRight(22)}| "+(Nota_1 < 10 ? N1 : Nota_1+" ")+$" | "+(Nota_2 < 10 ? N2 : Nota_2+" ")+$" |  "+(Media < 10 ? M : Media+" ")+$"  | {NomeDasTurmas[i].PadRight(5)} |\n");
+                        Write($"| {Nome.PadRight(22)}| " + (Nota_1 < 10 ? N1 : Nota_1 + " ") + $" | " + (Nota_2 < 10 ? N2 : Nota_2 + " ") + $" |  " + (Media < 10 ? M : Media + " ") + $"  | {NomeDasTurmas[i].PadRight(5)} |\n");
                     }
                 }
                 i++;
@@ -84,7 +84,7 @@ namespace menu
 
         //Pega o valor da nota
         private static string Pegar_Nota(string pergunta)
-        {    
+        {
             while (true)
             {
                 Write($"{pergunta}");
@@ -93,14 +93,14 @@ namespace menu
                 {
                     Avaliacao = Convert.ToDouble(ReadLine());
                 }
-                catch (Exception ex){}
+                catch (Exception ex) { }
                 if (Avaliacao >= 0 && Avaliacao <= 10)
                 {
                     return Convert.ToString(Avaliacao);
                 }
                 else
                 {
-                    SetCursorPosition(0, CursorTop-1);
+                    SetCursorPosition(0, CursorTop - 1);
                 }
             }
         }
@@ -209,7 +209,7 @@ namespace menu
             }
         }
 
-        
+
         private static void CadastrarTurma()
         {
             string Cabecalho = "             REGISTRAR NOVA TURMA", Turma;
@@ -330,7 +330,7 @@ namespace menu
         {
             string Aluno, Turma;
             int Op, ID_Aluno = -1, ID_Turma = -1;
-            
+
             Clear();
             Exibir_Lista_Alunos(0, 10, "              EDITAR NOTA");
             Write("Digite o nome do aluno(a): ");
@@ -427,7 +427,7 @@ namespace menu
                     dadosalunos.Close();
                     i++;
                 }
-                
+
                 dadosturmas.Close();
             }
             catch (Exception e)
@@ -464,13 +464,13 @@ namespace menu
                 for (int i = 0; i < NomeDasTurmas.Count; i++)
                 {
                     var _loc_ = File.ReadAllLines(@"C:\BaseDeDados\Alunos" + i + ".txt");
-                    
-                    for (int x = 0; x+2 <= _loc_.Length; x += 3)
+
+                    for (int x = 0; x + 2 <= _loc_.Length; x += 3)
                     {
                         List<string> Lista = new List<string>();
                         Lista.Add(_loc_[x]);
-                        Lista.Add(_loc_[x+1]);
-                        Lista.Add(_loc_[x+2]);
+                        Lista.Add(_loc_[x + 1]);
+                        Lista.Add(_loc_[x + 2]);
                         Lista_das_Turmas[i].Add(Lista);
                     }
                 }
