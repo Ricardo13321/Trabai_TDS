@@ -1,3 +1,4 @@
+using System.Data;
 using static System.Console;
 
 namespace menu
@@ -113,7 +114,7 @@ namespace menu
         {
             int Option = 0;
             Exibir_Barra();
-            WriteLine($"{questão}\n");
+            WriteLine($"{questão}");
             Exibir_Barra();
             WriteLine("[1] - Sim\n[X] - Não");
             try
@@ -315,7 +316,7 @@ namespace menu
                         Lista_das_Turmas[Id_Turma][Id_Aluno].Add(Aluno);
                         Lista_das_Turmas[Id_Turma][Id_Aluno].Add(Convert.ToString(Avaliacao_1));
                         Lista_das_Turmas[Id_Turma][Id_Aluno].Add(Convert.ToString(Avaliacao_2));
-                        WriteLine($"TURMA: {NomeDasTurmas[Lista_das_Turmas[Id_Turma][Id_Aluno].Count - 1]} \nAVALIAÇÃO 1: {Lista_das_Turmas[Id_Turma][Id_Aluno][1]} \nAVALIAÇÃO 2: {Lista_das_Turmas[Id_Turma][Id_Aluno][2]}");
+                        WriteLine($"TURMA: {NomeDasTurmas[Lista_das_Turmas[Id_Turma][Id_Aluno].Count - 1]}");
                         ReadLine();
                         GRAVAR();
                         return;
@@ -329,6 +330,36 @@ namespace menu
 
         }
 
+        private static void Editar_Dados(int ID_Turma, int ID_Aluno, int ID_Nota)
+        {
+            while (true)
+            {
+                try
+                {
+                    Write($"Escolha o valor da AV{ID_Nota} avaliação, digite um valor\n entre 0 e 10\nNova nota: ");
+                    int Nota = Convert.ToInt32(ReadLine());
+                    if (Nota < 0 || Nota > 10)
+                    {
+                        ForegroundColor = ConsoleColor.Red;
+                        WriteLine($"Valor inválido {Nota}, por favor digite um valor entre 0 e 10");
+                        ForegroundColor = ConsoleColor.Yellow;
+                        CursorVisible = false;
+                        Thread.Sleep(2000);
+                    }
+                    else
+                    {
+                        Exibir_Barra();
+                        Lista_das_Turmas[ID_Turma][ID_Aluno][ID_Nota] = Convert.ToString(Nota);
+                        return;
+                    }   
+                }
+                catch (Exception)
+                {
+                    Retornando_Para_O_Menu_Principal();
+                    return;
+                }
+            }
+        }
         private static void EditarNota()
         {
             string Aluno, Turma;
@@ -353,41 +384,10 @@ namespace menu
                         if (Aluno == Lista_das_Turmas[i][j][0])
                         {
                             ID_Aluno = j;
-                            try
-                            {
-                                Write($"Escolha o valor da AV1 avaliação, digite um valor\n entre 0 e 10\nNova nota: ");
-                                int Nota = Convert.ToInt32(ReadLine());
-                                if (Nota < 0 || Nota > 10)
-                                {
-                                    Retornando_Para_O_Menu_Principal();
-                                    return;
-                                }
-                                Exibir_Barra();
-                                Lista_das_Turmas[ID_Turma][ID_Aluno][1] = Convert.ToString(Nota);
-                                Write($"Escolha o valor da AV2 avaliação, digite um valor\n entre 0 e 10\nNova nota: ");
-                                
-                                Nota = Convert.ToInt32(ReadLine());
-                                
-                                if (Nota < 0 || Nota > 10)
-                                {
-                                    Retornando_Para_O_Menu_Principal();
-                                    return;
-                                }
-
-                                Lista_das_Turmas[ID_Turma][ID_Aluno][2] = Convert.ToString(Nota);
-                                
-                                Clear();
-                                WriteLine("A nota foi alterada com sucesso!");
-                                Thread.Sleep(2000);
-                                GRAVAR();
-                                Retornando_Para_O_Menu_Principal();
-                                return;
-                            }
-                            catch (Exception)
-                            {
-                                Retornando_Para_O_Menu_Principal();
-                                return;
-                            }
+                            Editar_Dados(ID_Turma,ID_Aluno,1);
+                            Editar_Dados(ID_Turma, ID_Aluno, 2);
+                            GRAVAR();
+                            return;
                         }
                     }
                 }
