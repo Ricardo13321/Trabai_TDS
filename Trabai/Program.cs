@@ -15,7 +15,7 @@ namespace menu
                 WriteLine(option);
             }
             ForegroundColor = ConsoleColor.Cyan;
-            WriteLine("Escolha uma das opções digitando um valor entre 0 à 8.");
+            WriteLine($"Escolha uma das opções digitando um valor entre 1 e {options.Length-1}.");
             ForegroundColor = ConsoleColor.Yellow;
             Write("Escolha a sua opção : ");
         }
