@@ -545,7 +545,16 @@ namespace menu
                 Write("Digite a turma desse aluno(a): ");
                 Turma = ReadLine().ToUpper();
                 ID_Turma = Procurar_ID_Turma(Turma);
-                _loc_ = ID_Turma == -1 ? true : false;
+                if (ID_Turma == -1)
+                {
+                    ForegroundColor = ConsoleColor.Cyan;
+                    WriteLine("Nenhuma turma foi encontrado!\nAperte ENTER para continuar");
+                    ForegroundColor = ConsoleColor.Yellow;
+                    CursorVisible = false;
+                    ReadLine();
+                    Retornando_Para_O_Menu_Principal();
+                    return;
+                }
             }
 
             _loc_ = true;
@@ -556,7 +565,16 @@ namespace menu
                 Write("Digite o nome atual do aluno(a): ");
                 Aluno = ReadLine().ToUpper();
                 ID_Aluno = Procurar_ID_Aluno(Aluno, ID_Turma);
-                _loc_ = ID_Aluno == -1 ? true : false;
+                if (ID_Aluno == -1)
+                {
+                    ForegroundColor = ConsoleColor.Cyan;
+                    WriteLine("Nenhuma aluno foi encontrado!\nAperte ENTER para continuar");
+                    ForegroundColor = ConsoleColor.Yellow;
+                    CursorVisible = false;
+                    ReadLine();
+                    Retornando_Para_O_Menu_Principal();
+                    return;
+                }
             }
 
             Editar_Dados(ID_Turma, ID_Aluno, 0);
