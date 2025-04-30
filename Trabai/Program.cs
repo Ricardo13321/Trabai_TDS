@@ -1,3 +1,5 @@
+using System.Collections;
+using System.ComponentModel.Design;
 using System.Data;
 using static System.Console;
 
@@ -10,9 +12,12 @@ namespace menu
         {
             foreach (String option in options)
             {
-                Console.WriteLine(option);
+                WriteLine(option);
             }
-            Console.Write("Escolha a sua opção : ");
+            ForegroundColor = ConsoleColor.Cyan;
+            WriteLine("Escolha uma das opções digitando um valor entre 0 à 8.");
+            ForegroundColor = ConsoleColor.Yellow;
+            Write("Escolha a sua opção : ");
         }
 
         public static void Exibir_Barra()
@@ -30,9 +35,14 @@ namespace menu
         }
 
         //Essa função é responsável por verificar se já existe uma turma específica na nossa base de dados
-        private static Boolean Verificar_Se_Existe(String Value)
+        private static Boolean Verificar_Se_Existe_Turma(String Value)
         {
             return NomeDasTurmas.Any(x => x.Contains(Value));
+        }
+
+        private static Boolean Verificar_Se_Existe_Aluno(int ID_Turma, int ID_Aluno, String Nome)
+        {
+            return Lista_das_Turmas[ID_Turma][ID_Aluno].Any(x => x.Contains(Nome));
         }
 
         //Essa função é responsável por exibir uma lista das turma e seus IDs
@@ -50,8 +60,10 @@ namespace menu
         {
             Clear();
             CursorVisible = false;
+            ForegroundColor = ConsoleColor.Cyan;
             WriteLine("Retornando para Menu principal!");
             Thread.Sleep(2000);
+            ForegroundColor = ConsoleColor.Yellow;
             CursorVisible = true;
         }
 
@@ -59,10 +71,13 @@ namespace menu
         private static void Exibir_Lista_Alunos(double min, double max, string cabecalho)
         {
             EscreverCabecalho(cabecalho);
+            BackgroundColor = ConsoleColor.DarkYellow;
+            ForegroundColor = ConsoleColor.Black;
             WriteLine("|         NOME          | AV1 | AV2 | MÉDIA | TURMA |");
             WriteLine("|---------------------------------------------------|");
-            
             int i = 0;
+            bool Lista_Vazia = true;
+            bool AlternarCor = true;
             foreach (var item in Lista_das_Turmas)
             {
                 foreach (var item1 in item)
@@ -77,11 +92,29 @@ namespace menu
 
                     if (Media >= min && Media <= max)
                     {
+                        if (AlternarCor)
+                        {
+                            BackgroundColor = ConsoleColor.Yellow;
+                            AlternarCor = false;
+                        }
+                        else
+                        {
+                            BackgroundColor = ConsoleColor.DarkYellow;
+                            AlternarCor = true;
+                        }
                         Write($"| {Nome.PadRight(22)}| " + (Nota_1 < 10 ? N1 : Nota_1 + " ") + $" | " + (Nota_2 < 10 ? N2 : Nota_2 + " ") + $" |  " + (Media < 10 ? M : Media + " ") + $"  | {NomeDasTurmas[i].PadRight(5)} |\n");
+                        Lista_Vazia = false;
                     }
                     
                 }
+                
                 i++;
+            }
+            ResetColor();
+            ForegroundColor = ConsoleColor.Yellow;
+            if (Lista_Vazia)
+            {
+                WriteLine("|".PadRight(52)+"|\n"+"|".PadRight(10)+"Está tabela parece estar vazia..."+"|".PadLeft(10)+"\n|".PadRight(53)+"|");
             }
             WriteLine("=====================================================");
         }
@@ -126,18 +159,48 @@ namespace menu
             return Option == 1 ? true : false;
         }
 
+        private static string Perguntar_ao_usuario_Dados(string questão)
+        {
+            string Option;
+            Exibir_Barra();
+            WriteLine($"{questão}");
+            Exibir_Barra();
+            WriteLine("[1] - NOME\n[2] - NOTAS\n[X] - Não");
+            try
+            {
+                Option = ReadLine();
+                return Option;
+            }
+            catch (Exception ex) 
+            { 
+            
+            }
+
+            return "x";
+        }
+
+        private static void Enter_To_Continue()
+        {
+            WriteLine("Aperte ENTER para continuar...");
+            CursorVisible = false;
+            ReadLine();
+            CursorVisible = true;
+        }
+
         //Aqui é onde criamos nossas listas
         static List<List<List<string>>> Lista_das_Turmas = new List<List<List<string>>>();
         static List<string> NomeDasTurmas = new List<string>();
 
         public static void Main(string[] args)
         {
+            Title = "Gerenciamento de Turmas";
+            ForegroundColor = ConsoleColor.Yellow;
             Carregar();
             String[] options =
                 {
                     "[1]- Registrar Nova Turma",
-                    "[2]- Registrar Novo Aluno",
-                    "[3]- Editar Nota",
+                    "[2]- Registrar Novo Aluno(a)",
+                    "[3]- Editar Dados",
                     "[4]- Exibir Aprovados",
                     "[5]- Exibir Recuperação",
                     "[6]- Exibir Reprovados",
@@ -150,9 +213,7 @@ namespace menu
             while (true)
             {
                 Clear();
-                ForegroundColor = ConsoleColor.Red;
                 EscreverCabecalho("                     MENU");
-                ForegroundColor = ConsoleColor.Yellow;
 
                 printMenu(options);
                 try
@@ -178,23 +239,23 @@ namespace menu
                         CadastrarAluno();
                         break;
                     case 3:
-                        EditarNota();
+                        Editar_Dados();
                         break;
                     case 4:
                         Exibir_Lista_Alunos(7, 10, "            ALUNOS ARPOVADOS");
-                        ReadLine();
+                        Enter_To_Continue();
                         break;
                     case 5:
                         Exibir_Lista_Alunos(5, 6.9, "           ALUNOS DE RECUPERAÇÃO");
-                        ReadLine();
+                        Enter_To_Continue();
                         break;
                     case 6:
                         Exibir_Lista_Alunos(0, 4.9, "           ALUNOS REPROVADOS");
-                        ReadLine();
+                        Enter_To_Continue();
                         break;
                     case 7:
                         Exibir_Lista_Alunos(0, 10, "            TODOS OS ALUNOS");
-                        ReadLine();
+                        Enter_To_Continue();
                         break;
                     case 8:
                         GRAVAR();
@@ -229,28 +290,57 @@ namespace menu
 
                 Exibir_Barra();
                 WriteLine("Digite o nome/código da nova turma");
+                ForegroundColor = ConsoleColor.Cyan;
+                WriteLine("Aviso: o sistema ira aceitar turmas/códigos \ncom apenas 3 dígitos, exemplo: 1-A");
+                ForegroundColor = ConsoleColor.Yellow;
                 Exibir_Barra();
                 Turma = ReadLine().ToUpper();
 
-                if (!Verificar_Se_Existe(Turma))
+                if (Turma.Length != 3)
+                {
+                    Clear();
+                    EscreverCabecalho("                    Aviso!");
+                    ForegroundColor = ConsoleColor.Cyan;
+                    WriteLine("Tamanho do nome da turma não aceito pelo sistema.\nPor favor, digite um valor com apenas 3 dígitos.\nExemplo: 1-A, 2-B...");
+                    ForegroundColor = ConsoleColor.Yellow;
+                    WriteLine("Aperte ENTER para continuar...");
+                    CursorVisible = false;
+                    ReadLine();
+                    CursorVisible = true;
+                    Retornando_Para_O_Menu_Principal();
+                    return;
+                }
+
+                if (!Verificar_Se_Existe_Turma(Turma))
                 {
                     NomeDasTurmas.Add(Turma);
                     List<List<string>> _loc_ = new List<List<String>>();
                     Lista_das_Turmas.Add(_loc_);
                     Clear();
+                    EscreverCabecalho("                    Aviso!");
+                    CursorVisible = false;
+                    ForegroundColor = ConsoleColor.Cyan;
                     WriteLine(
-                        $"A turma {Turma} foi cadastrada com sucesso!\n" +
-                        "Salvando alterações...");
-                    Thread.Sleep(2000);
+                        $"A turma {Turma} foi cadastrada com sucesso!");
+                    ForegroundColor = ConsoleColor.Yellow;
+                    WriteLine("Aperte ENTER para continuar e salvar...");
+                    CursorVisible = false;
+                    ReadLine();
+                    CursorVisible = true;
                     GRAVAR();
                 }
                 else
                 {
                     Clear();
-                    ForegroundColor = ConsoleColor.Red;
                     EscreverCabecalho("                    Aviso!");
+                    ForegroundColor = ConsoleColor.Cyan;
                     WriteLine($"A turma {Turma} já consta na nossa base de dados!\nRetornando para o Menu princípal.");
                     ForegroundColor = ConsoleColor.Yellow;
+                    WriteLine("Aperte ENTER para continuar e salvar...");
+                    CursorVisible = false;
+                    ReadLine();
+                    CursorVisible = true;
+                    Retornando_Para_O_Menu_Principal();
                     Thread.Sleep(2000);
                 }
             }
@@ -264,7 +354,7 @@ namespace menu
 
         private static void CadastrarAluno()
         {
-            EscreverCabecalho("               CADASTRAR ALUNO");
+            EscreverCabecalho("               CADASTRAR ALUNO(A)");
 
             if (Perguntar_ao_usuario("Deseja cadastrar um novo(a) aluno(a) ?"))
             {
@@ -277,6 +367,7 @@ namespace menu
 
                     try
                     {
+                        Exibir_Barra();
                         Exibir_Lista_das_Turmas();
                         Write("[X] CANCELAR\n");
                         Exibir_Barra();
@@ -306,9 +397,36 @@ namespace menu
                         Exibir_Barra();
                         Write("NOME: ");
                         String Aluno = ReadLine().ToUpper(), Avaliacao_1 = "0", Avaliacao_2 = "0";
-                        //Avaliacao_1 = Pegar_Nota("Avaliação 1: ");
-                        //Avaliacao_2 = Pegar_Nota("Avaliação 2: ");
-                        //Criando uma lista em Lista
+
+                        if (Aluno.Length < 3)
+                        {
+                            Clear();
+                            EscreverCabecalho("                    Aviso!");
+                            ForegroundColor = ConsoleColor.Cyan;
+                            WriteLine("Tamanho do nome do Aluno(a) não aceito pelo sistema.\nPor favor, digite um valor com ou mais de 3 dígitos.");
+                            ForegroundColor = ConsoleColor.Yellow;
+                            WriteLine("Aperte ENTER para continuar...");
+                            CursorVisible = false;
+                            ReadLine();
+                            CursorVisible = true;
+                            Retornando_Para_O_Menu_Principal();
+                            return;
+                        }
+
+                        foreach (var item in Lista_das_Turmas[Id_Turma])
+                        {
+                            if (item[0] == Aluno)
+                            {
+                                ForegroundColor = ConsoleColor.Cyan;
+                                WriteLine($"O aluno(a) {Aluno} já existe na turma {NomeDasTurmas[Id_Turma]}!\nAperte ENTER para continuar...");
+                                CursorVisible = false;
+                                ReadLine();
+                                ForegroundColor = ConsoleColor.Yellow;
+                                Retornando_Para_O_Menu_Principal();
+                                return;
+                            }
+                        }
+
                         List<string> _loc_ = new List<String>();
                         Lista_das_Turmas[Id_Turma].Add(_loc_);
 
@@ -317,6 +435,9 @@ namespace menu
                         Lista_das_Turmas[Id_Turma][Id_Aluno].Add(Convert.ToString(Avaliacao_1));
                         Lista_das_Turmas[Id_Turma][Id_Aluno].Add(Convert.ToString(Avaliacao_2));
                         WriteLine($"TURMA: {NomeDasTurmas[Lista_das_Turmas[Id_Turma][Id_Aluno].Count - 1]}");
+                        ForegroundColor = ConsoleColor.Cyan;
+                        WriteLine($"O aluno(a) {Aluno} foi adicionado(a) à turma {NomeDasTurmas[Id_Turma]} com sucesso!\nAperte ENTER para continuar...");
+                        CursorVisible = false;
                         ReadLine();
                         GRAVAR();
                         return;
@@ -325,6 +446,7 @@ namespace menu
             }
             else
             {
+                Retornando_Para_O_Menu_Principal();
                 return;
             }
 
@@ -336,37 +458,144 @@ namespace menu
             {
                 try
                 {
-                    Write($"Escolha o valor da AV{ID_Nota} avaliação, digite um valor\n entre 0 e 10\nNova nota: ");
-                    int Nota = Convert.ToInt32(ReadLine());
-                    if (Nota < 0 || Nota > 10)
+                    if (ID_Nota == 0)
                     {
-                        ForegroundColor = ConsoleColor.Red;
-                        WriteLine($"Valor inválido {Nota}, por favor digite um valor entre 0 e 10");
-                        ForegroundColor = ConsoleColor.Yellow;
-                        CursorVisible = false;
-                        Thread.Sleep(2000);
+                        Write("Escolha o novo nome para esse aluno(a): ");
+                        string Novo_Nome = ReadLine().ToUpper();
+                        if (!Verificar_Se_Existe_Aluno(ID_Turma, ID_Aluno, Novo_Nome))
+                        {
+                            Lista_das_Turmas[ID_Turma][ID_Aluno][ID_Nota] = Novo_Nome;
+                            CursorVisible = false;
+                            ForegroundColor = ConsoleColor.Cyan;
+                            WriteLine($"Nome atualizado com sucesso para {Novo_Nome}!");
+                            CursorVisible = false;
+                            ReadLine();
+                            CursorVisible = true;
+                            return;
+                        } 
+                        else
+                        {
+                            ForegroundColor = ConsoleColor.Red;
+                            WriteLine($"O nome {Novo_Nome}, já está cadastrado!");
+                            ForegroundColor = ConsoleColor.Yellow;
+                        }   
                     }
                     else
                     {
-                        Exibir_Barra();
-                        Lista_das_Turmas[ID_Turma][ID_Aluno][ID_Nota] = Convert.ToString(Nota);
-                        return;
-                    }   
+                        Write($"Escolha o valor da AV{ID_Nota}, digite um valor\n entre 0 e 10\nNova nota: ");
+                        int Nota = Convert.ToInt32(ReadLine());
+                        if (Nota < 0 || Nota > 10)
+                        {
+                            ForegroundColor = ConsoleColor.Red;
+                            WriteLine($"Valor inválido {Nota}, por favor digite um valor entre 0 e 10");
+                            ForegroundColor = ConsoleColor.Yellow;
+                            CursorVisible = false;
+                            Thread.Sleep(2000);
+                        }
+                        else
+                        {
+                            Exibir_Barra();
+                            Lista_das_Turmas[ID_Turma][ID_Aluno][ID_Nota] = Convert.ToString(Nota);
+                            return;
+                        }
+                    }
+                    
                 }
                 catch (Exception)
                 {
-                    Retornando_Para_O_Menu_Principal();
+                    ForegroundColor = ConsoleColor.Cyan;
+                    WriteLine($"Essa nota não será atualizada");
+                    ForegroundColor = ConsoleColor.Yellow;
                     return;
                 }
             }
         }
-        private static void EditarNota()
+        private static void Editar_Dados()
+        {
+            Clear();
+            Exibir_Lista_Alunos(0, 10, "              EDITAR DADOS");
+            
+            switch (Perguntar_ao_usuario_Dados("Você deseja editar algum dado?"))
+            {
+                case "1":
+                    Editar_Nomes();
+                    break;
+                case "2":
+                    Editar_Nota();
+                    break;
+
+                default:
+                    Retornando_Para_O_Menu_Principal();
+                    break;
+            }
+            
+        }
+
+        public static void Editar_Nomes()
         {
             string Aluno, Turma;
-            int Op, ID_Aluno = -1, ID_Turma = -1;
+            int ID_Aluno = -1, ID_Turma = -1;
 
-            Clear();
-            Exibir_Lista_Alunos(0, 10, "              EDITAR NOTA");
+            Exibir_Lista_Alunos(0, 10, "              EDITAR NOMES");
+
+            bool _loc_ = true;
+            while (_loc_) {
+                Clear();
+                Exibir_Lista_Alunos(0, 10, "              EDITAR NOMES");
+                Write("Digite a turma desse aluno(a): ");
+                Turma = ReadLine().ToUpper();
+                ID_Turma = Procurar_ID_Turma(Turma);
+                _loc_ = ID_Turma == -1 ? true : false;
+            }
+
+            _loc_ = true;
+            while (_loc_)
+            {
+                Clear();
+                Exibir_Lista_Alunos(0, 10, "              EDITAR NOMES");
+                Write("Digite o nome atual do aluno(a): ");
+                Aluno = ReadLine().ToUpper();
+                ID_Aluno = Procurar_ID_Aluno(Aluno, ID_Turma);
+                _loc_ = ID_Aluno == -1 ? true : false;
+            }
+
+            Editar_Dados(ID_Turma, ID_Aluno, 0);
+            Retornando_Para_O_Menu_Principal();
+            GRAVAR();
+            return;
+        }
+
+        public static int Procurar_ID_Turma(string Nome_Turma)
+        {
+            for (int i = 0; i < NomeDasTurmas.Count; i++)
+            {
+                if (Nome_Turma == NomeDasTurmas[i])
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static int Procurar_ID_Aluno(string Nome_Aluno, int i) 
+        {
+            for (int j = 0; j < Lista_das_Turmas[i].Count; j++)
+            {
+                if (Nome_Aluno == Lista_das_Turmas[i][j][0])
+                {
+                    return j;
+                }
+            }
+            return -1;
+        }
+
+        public static void Editar_Nota()
+        {
+            string Aluno, Turma;
+            int ID_Aluno = -1, ID_Turma = -1;
+
+            Exibir_Lista_Alunos(0, 10, "              EDITAR NOTAS");
+
             Write("Digite o nome do aluno(a): ");
             Aluno = ReadLine().ToUpper();
 
@@ -384,9 +613,17 @@ namespace menu
                         if (Aluno == Lista_das_Turmas[i][j][0])
                         {
                             ID_Aluno = j;
-                            Editar_Dados(ID_Turma,ID_Aluno,1);
+                            ForegroundColor = ConsoleColor.Cyan;
+                            WriteLine("Atenção: Caso não queira mudar o valor \né só não digitar um valor numérico e apertar Enter");
+                            ForegroundColor = ConsoleColor.Yellow;
+                            Editar_Dados(ID_Turma, ID_Aluno, 1);
                             Editar_Dados(ID_Turma, ID_Aluno, 2);
+                            ForegroundColor = ConsoleColor.Cyan;
+                            CursorVisible = false;
+                            WriteLine("As notas do aluno(a) foram atualizadas\nAperte enter para salvar.");
+                            ReadLine();
                             GRAVAR();
+                            Retornando_Para_O_Menu_Principal();
                             return;
                         }
                     }
@@ -444,7 +681,7 @@ namespace menu
             {
                 Clear();
                 ForegroundColor = ConsoleColor.Green;
-                WriteLine("DADOS GRAVADOS COM SUCESSO!");
+                WriteLine("DADOS ATUALIZADOS COM SUCESSO!");
                 ForegroundColor = ConsoleColor.Yellow;
             }
             CursorVisible = false;
