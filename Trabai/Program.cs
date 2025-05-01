@@ -1,6 +1,3 @@
-using System.Collections;
-using System.ComponentModel.Design;
-using System.Data;
 using static System.Console;
 
 namespace menu
@@ -214,7 +211,6 @@ namespace menu
             {
                 Clear();
                 EscreverCabecalho("                     MENU");
-
                 printMenu(options);
                 try
                 {
@@ -273,7 +269,6 @@ namespace menu
 
             }
         }
-
 
         private static void CadastrarTurma()
         {
@@ -659,6 +654,154 @@ namespace menu
             {
                 WriteLine($"[{i}] - {NomeDasTurmas[i]}");
             }
+
+        }
+
+        private static void RegistrarNota()
+        {
+            EscreverCabecalho("REGISTRAR NOTA");
+            ExibirListaAlunos(0, 10);
+            WriteLine("Qual avaliação deseja registrar?\n" +
+               "[1] - AV1\n" +
+               "[2] - AV2\n" +
+               "[x] - SAIR");
+           
+            if (Perguntar_ao_usuario())
+            {
+                Clear();
+                EscreverCabecalho("=              REGISTRANDO NOTA              =");
+                WriteLine("Digite o valor da AV1:");
+                double nota = Convert.ToDouble(ReadLine());
+
+
+                if (Verificar_Se_Existe_Nota(nota))
+                {
+                    List<List<double>> _loc_ = new List<List<double>>();
+                    WriteLine($"A nota {nota} foi cadastrada com sucesso!\n" +
+                        "Salvando alterações...");
+                    Thread.Sleep(2000);
+                    ReadLine();
+                    GRAVAR();
+                }
+                else
+                {
+                    Clear();
+                    ForegroundColor = ConsoleColor.Red;
+                    EscreverCabecalho("=                   Aviso!                  =");
+                    WriteLine($"A nota {nota} já consta na nossa base de dados!\nRetornando para o Menu principal.");
+                    ForegroundColor = ConsoleColor.Yellow;
+                    Thread.Sleep(2000);
+                }
+
+            }
+            else
+            {
+                Clear();
+                CursorVisible = false;
+                WriteLine("Retornando para Menu principal.");
+                Thread.Sleep(2000);
+                CursorVisible = true;
+                return;
+            }
+
+            WriteLine("Digite a proxima avaliação a registrar ([1]-Av1 ou [2]-Av2):");
+            int Op = Convert.ToInt32(ReadLine());
+
+            WriteLine($"Digite o valor do {Op}º exame:");
+            double Nota = Convert.ToDouble(ReadLine());
+        }
+
+        private static void Exibir_Lista_das_Turmas()
+        {
+            for (int i = 0; i < NomeDasTurmas.Count; i++)
+            {
+                WriteLine($"[{i}] - {NomeDasTurmas[i]}");
+            }
+        }
+
+        private static void Exibir_Lista_da_Turma()
+        {
+            for (int i = 0; i < NomeDasTurmas.Count; i++)
+            {
+                WriteLine($"[{i}] - {NomeDasTurmas[i]}");
+            }
+        }
+
+        private static void GRAVAR()
+        {
+            try
+            {
+                StreamWriter dadosnomes, Cu;
+                string arq = @"C:\BaseDeDados\Turmas.txt";
+                dadosnomes = File.CreateText(arq);
+
+                string arq1 = @"C:\BaseDeDados\Alunos.txt";
+                Cu = File.CreateText(arq1);
+
+                foreach (var item in NomeDasTurmas)
+                {
+                    dadosnomes.WriteLine($"{item}");
+                }
+
+                for (int i = 0; i < Lista_das_Turmas.Count; i++)
+                {
+                    for (int x = 0; x < Lista_das_Turmas[i].Count; x++)
+                    {
+
+                        foreach (var item in Lista_das_Turmas[i][x])
+                        {
+                            dadosnomes.WriteLine($"{item[0]}");
+                        }
+
+                        string arq2 = @"C:\BaseDeDados\Av3.txt";
+                        dadosnomes = File.CreateText(arq2);
+
+                        foreach (var item in Lista_das_Turmas[i][x])
+                        {
+                            dadosnomes.WriteLine($"{item[1]}");
+                        }
+
+                        string arq3 = @"C:\BaseDeDados\Av2.txt";
+                        dadosnomes = File.CreateText(arq3);
+                        foreach (var item in Lista_das_Turmas[i][x])
+                        {
+                            dadosnomes.WriteLine($"{item[2]}");
+                        }
+                    }
+                }
+                dadosnomes.Close();
+                Cu.Close();
+
+            }
+            catch (Exception e)
+            {
+                WriteLine($"{e.Message}");
+            }
+            finally
+            {
+                Clear();
+                ForegroundColor = ConsoleColor.Green;
+                WriteLine("DADOS GRAVADOS COM SUCESSO!");
+                ForegroundColor = ConsoleColor.Yellow;
+            }
+            CursorVisible = false;
+            Thread.Sleep(1000);
+            CursorVisible = true;
+        }
+
+        private static void ExibirListaAlunos(double min, double max)
+        {
+
+        }
+
+        private static Boolean Verificar_Se_Existe(String Value)
+        {
+            return NomeDasTurmas.Any(x => x.Contains(Value));
+        }
+        private static Boolean Verificar_Se_Existe_Nota(double Value)
+        {
+            double epsilon = 0.01;
+            return NomeDasTurmas.Any(x => Math.Abs(Value) < epsilon);
         }
 
         private static void GRAVAR()
@@ -732,7 +875,6 @@ namespace menu
                         Lista_das_Turmas[i].Add(Lista);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -740,8 +882,6 @@ namespace menu
                 WriteLine("Não foi encontrado nenhum dado salvo!");
                 Thread.Sleep(2000);
             }
-
         }
-
     }
 }
